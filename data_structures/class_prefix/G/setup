@@ -1,0 +1,71 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+PROBLEM_NAME=$(basename "$PWD")
+SRC_FILE="G.cpp"
+OUT_FILE="G"
+
+# If Makefile exists, just use it
+if [[ -f Makefile ]]; then
+  echo "Running setup via Makefile"
+  make rebuild || make
+  exit 0
+fi
+
+echo "No Makefile found → compiling manually"
+
+CXX="${CXX:-g++}"
+
+supports() {
+  echo 'int main(){return 0;}' | "$CXX" -x c++ -std=c++17 "$1" -c -o /dev/null - >/dev/null 2>&1
+}
+
+UNAME_S="$(uname -s 2>/dev/null || echo Unknown)"
+IS_GLIBC=0
+if echo | "$CXX" -dM -E -x c++ - 2>/dev/null | grep -q '__GLIBC__'; then
+  IS_GLIBC=1
+fi
+
+CXXFLAGS=(-std=c++17 -O2 -Wall -Wextra -pedantic -Wformat=2 -Wshadow)
+
+for f in \
+  -Wfloat-equal \
+  -Wconversion \
+  -Wlogical-op \
+  -Wshift-overflow=2 \
+  -Wduplicated-cond \
+  -Wcast-qual \
+  -Wcast-align \
+  -Wno-unused-result \
+  -Wno-sign-conversion \
+  -fdiagnostics-color=always
+do
+  supports "$f" && CXXFLAGS+=("$f")
+done
+
+DEBUG_FLAGS=()
+for f in \
+  -fsanitize=address \
+  -fsanitize=undefined \
+  -fno-sanitize-recover=all \
+  -fstack-protector-all
+do
+  supports "$f" && DEBUG_FLAGS+=("$f")
+done
+supports "-fsanitize=float-divide-by-zero" && DEBUG_FLAGS+=(-fsanitize=float-divide-by-zero)
+supports "-fsanitize=float-cast-overflow" && DEBUG_FLAGS+=(-fsanitize=float-cast-overflow)
+
+if [[ "$IS_GLIBC" -eq 1 ]]; then
+  DEBUG_FLAGS+=(-D_FORTIFY_SOURCE=2)
+fi
+
+echo | "$CXX" -dM -E -x c++ - 2>/dev/null | grep -q '__GNUG__' && DEBUG_FLAGS+=(-D_GLIBCXX_DEBUG -D_GLIBCXX_DEBUG_PEDANTIC)
+
+ALL_FLAGS=("${CXXFLAGS[@]}" "${DEBUG_FLAGS[@]}")
+
+echo "Running setup (manual)"
+set -x
+"$CXX" "${ALL_FLAGS[@]}" "$SRC_FILE" -o "$OUT_FILE"
+set +x
+
+echo "Built: $OUT_FILE"

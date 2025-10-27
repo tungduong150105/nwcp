@@ -1,0 +1,31 @@
+{
+  "name": "[NOIP2018]\u9053\u8def\u94fa\u8bbe",
+  "group": "NowCoder",
+  "url": "https://ac.nowcoder.com/acm/contest/19483/J",
+  "interactive": false,
+  "memoryLimit": 1024,
+  "timeLimit": 2000,
+  "tests": [
+    {
+      "input": "6\n4 3 2 5 3 5\n",
+      "output": "9\n"
+    }
+  ],
+  "testType": "single",
+  "input": {
+    "type": "stdin"
+  },
+  "output": {
+    "type": "stdout"
+  },
+  "languages": {
+    "java": {
+      "mainClass": "Main",
+      "taskClass": "NOIP2018"
+    }
+  },
+  "batch": {
+    "id": "41cd2fde-9cca-4a2f-9291-0d3ff815a1dd",
+    "size": 1
+  }
+}

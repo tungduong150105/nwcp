@@ -1,3 +1,5 @@
+#include "bits/stdc++.h"
+
 template <int MOD> int mod_inv_int(int a) {
     int b = MOD, u = 1, w = 0;
     while (b != 0) {
@@ -88,3 +90,26 @@ template <int MOD> struct ModNum {
 };
 
 using num = ModNum<int(1e9) + 7>;
+
+int main() {
+    std::ios_base::sync_with_stdio(false); std::cin.tie(nullptr);
+    int n; std::cin >> n;
+    std::string s; std::cin >> s;
+    num tot = 0, cnt = 0;
+    for (int i = 0; i < n; ++i) {
+        if (s[i] == '1') {
+            tot += num(i + 1);
+            cnt += num(1);
+        }
+    }
+    num ans = 0;
+    for (int i = 0; i < n; ++i) {
+        tot -= cnt;
+        if (s[i] == '1') {
+            cnt -= num(1);
+            ans += tot;
+        }
+    }
+    std::cout << ans << "\n";
+    return 0;
+}

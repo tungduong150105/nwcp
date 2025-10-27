@@ -1,0 +1,31 @@
+{
+  "name": "[NOIP2013] Building Block Competition",
+  "group": "NowCoder",
+  "url": "https://ac.nowcoder.com/acm/contest/19483/I",
+  "interactive": false,
+  "memoryLimit": 256,
+  "timeLimit": 1000,
+  "tests": [
+    {
+      "input": "5\n2 3 4 1 2\n",
+      "output": "5\n"
+    }
+  ],
+  "testType": "single",
+  "input": {
+    "type": "stdin"
+  },
+  "output": {
+    "type": "stdout"
+  },
+  "languages": {
+    "java": {
+      "mainClass": "Main",
+      "taskClass": "NOIP2013BuildingBlockCompetition"
+    }
+  },
+  "batch": {
+    "id": "19ea9170-bbd6-4202-a938-a2cdf55be2ce",
+    "size": 1
+  }
+}
